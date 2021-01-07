@@ -18,7 +18,7 @@ package za.co.absa.spline.harvester.plugin.embedded
 
 import javax.annotation.Priority
 import org.apache.spark.sql.SaveMode.{Append, Overwrite}
-import org.apache.spark.sql.catalyst.catalog.{CatalogStorageFormat, HiveTableRelation}
+import org.apache.spark.sql.catalyst.catalog.{CatalogStorageFormat, CatalogTable}
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.execution.command.{CreateDataSourceTableAsSelectCommand, CreateTableCommand, DropTableCommand}
 import org.apache.spark.sql.execution.datasources.{HadoopFsRelation, InsertIntoDataSourceCommand, InsertIntoHadoopFsRelationCommand, LogicalRelation}
@@ -44,9 +44,19 @@ class SQLPlugin(
 
   private val extractor = new CatalogTableExtractor(session.catalog, pathQualifier)
 
+  private def getFieldValue[T](o:Any, fieldName:String): T = {
+    val field = o.getClass.getDeclaredFields.find(_.getName == fieldName) //for some reasons, "find" works better (e.g. when overloaded)
+      .getOrElse(throw new IllegalStateException(s"field $fieldName do not exist.\navailable fields: ${o.getClass.getDeclaredFields.map(_.getName).toSeq}"))
+    field.setAccessible(true)
+    val r = field.get(o).asInstanceOf[T]
+    r
+  }
+
   override val readNodeProcessor: PartialFunction[LogicalPlan, ReadNodeInfo] = {
-    case htr: HiveTableRelation =>
-      extractor.asTableRead(htr.tableMeta)
+    // Spark 2.2.0 do not have this class...
+    case htr if htr.getClass.getName == "org.apache.spark.sql.catalyst.catalog.HiveTableRelation" =>
+      val catalogTable = getFieldValue[CatalogTable](htr, fieldName = "tableMeta")
+      extractor.asTableRead(catalogTable)
 
     case lr: LogicalRelation if lr.relation.isInstanceOf[HadoopFsRelation] =>
       val hr = lr.relation.asInstanceOf[HadoopFsRelation]
