@@ -25,7 +25,7 @@ cross_build() {
   echo "Building with Scala $SCALA_VER"
   find $BASE_DIR/target/* -type d -exec rm -rf {} \;
   mvn scala-cross-build:change-version -Pscala-$SCALA_VER
-  mvn install -Pscala-$SCALA_VER
+  mvn install -Pscala-$SCALA_VER -Dmaven.test.skip=true
 }
 
 # ------------------------------------------------
