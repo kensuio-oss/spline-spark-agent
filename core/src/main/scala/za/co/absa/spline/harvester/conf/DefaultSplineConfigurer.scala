@@ -82,7 +82,7 @@ class DefaultSplineConfigurer(sparkSession: SparkSession, userConfiguration: Con
 
   private lazy val configuration = new CompositeConfiguration((Seq(
     userConfiguration,
-  ) ++ loadCustomClassLoaderProperties).asJava)
+  ) ++ loadPropertiesConfKensu).asJava)
 
   lazy val splineMode: SplineMode = {
     val modeName = configuration.getRequiredString(Mode)
