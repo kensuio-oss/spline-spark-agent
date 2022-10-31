@@ -72,10 +72,17 @@ class DefaultSplineConfigurer(sparkSession: SparkSession, userConfiguration: Con
 
   import collection.JavaConverters._
 
-  private lazy val configuration = new CompositeConfiguration(Seq(
+  def loadPropertiesConfKensu: Option[PropertiesConfiguration] = {
+    // use explicit class loader to allow to load spline & kensu from a JAR loaded via classloader.addURL()
+    val resourceUrl = getClass.getClassLoader.getResource(defaultPropertiesFileName)
+    val res = scala.util.Try(new PropertiesConfiguration(resourceUrl))
+    res.failed.foreach { f => println(s"failed loading spline properties from ${resourceUrl}: $f") }
+    Some(res.get)
+  }
+
+  private lazy val configuration = new CompositeConfiguration((Seq(
     userConfiguration,
-    new PropertiesConfiguration(defaultPropertiesFileName)
-  ).asJava)
+  ) ++ loadPropertiesConfKensu).asJava)
 
   lazy val splineMode: SplineMode = {
     val modeName = configuration.getRequiredString(Mode)
