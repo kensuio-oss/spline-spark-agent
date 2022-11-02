@@ -30,7 +30,7 @@
     <dependencies>
         <dependency>
             <groupId>za.co.absa.spline.agent.spark</groupId>
-            <artifactId>agent-core-${env.sparkV}_${scala.binary.version}</artifactId>
+            <artifactId>agent-core-${env.sparkVersionSuffix}_${scala.binary.version}</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
