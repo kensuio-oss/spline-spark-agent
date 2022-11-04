@@ -22,7 +22,7 @@
     <artifactId>spline-spark-agent_2.11</artifactId>
     <name>Spline Spark Agent</name>
     <description>Spline Agent for Apache Spark</description>
-    <version>0.5.6-kensu-spark20fix</version>
+    <version>0.5.6-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -104,17 +104,19 @@
         <url>${scm.url}</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <tag>release/0.5.6-kensu-spark20fix</tag>
+        <tag>release/0.5.6-SNAPSHOT</tag>
     </scm>
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>maven-snapshots</id>
+            <name>Kensu Artefacts</name>
+            <url>https://public.usnek.com/n/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>maven-releases</id>
+            <name>Kensu Artefacts</name>
+            <url>https://public.usnek.com/n/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 
