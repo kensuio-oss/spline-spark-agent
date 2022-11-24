@@ -101,6 +101,7 @@
         <delta-08.version>0.8.0</delta-08.version>
         <delta-10.version>1.0.0</delta-10.version>
         <delta-11.version>1.1.0</delta-11.version>
+        <delta-21.version>2.1.0</delta-21.version>
 
         <!-- Cross build properties -->
 
@@ -610,6 +611,32 @@
 <!--                        <artifactId>spark-cassandra-connector_${scala.binary.version}</artifactId>-->
 <!--                        <version>3.2.0</version>-->
 <!--                    </dependency>-->
+                    <dependency>
+                        <groupId>org.apache.spark</groupId>
+                        <artifactId>spark-parent_${scala.binary.version}</artifactId>
+                        <version>${spark.version}</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+        </profile>
+
+        <profile>
+            <id>spark-3.3</id>
+            <properties>
+                <spark.version>${spark-33.version}</spark.version>
+                <json4s.version>${json4s-37-M11.version}</json4s.version>
+                <delta.version>${delta-21.version}</delta.version>
+            </properties>
+            <dependencyManagement>
+                <dependencies>
+                    <!-- connector for Spark 3.3 is not yet available, using the latest version -->
+                    <dependency>
+                        <groupId>com.datastax.spark</groupId>
+                        <artifactId>spark-cassandra-connector_${scala.binary.version}</artifactId>
+                        <version>3.2.0</version>
+                    </dependency>
                     <dependency>
                         <groupId>org.apache.spark</groupId>
                         <artifactId>spark-parent_${scala.binary.version}</artifactId>
