@@ -49,7 +49,11 @@ class SaveIntoDataSourceCommandPlugin(
       case _ =>
         val maybeProvider = RelationProviderExtractor.unapply(cmd)
         val opts = cmd.options
-        val uri = opts.get("path").map(pathQualifier.qualify)
+        val uri = opts.get("path")
+          .orElse(
+            // redshift
+            opts.get("url").flatMap(url => opts.get("dbtable").map(dbtable => s"$url:$dbtable")))
+          .map(pathQualifier.qualify)
           .getOrElse(sys.error(s"Cannot extract source URI from the options: ${opts.keySet mkString ","}"))
         (SourceIdentifier(maybeProvider, uri), cmd.mode, cmd.query, opts)
     }
